@@ -1,42 +1,57 @@
 package backend.academy;
 
 import backend.academy.models.Cell;
+import backend.academy.models.Coordinate;
 import backend.academy.models.Wall;
 import java.util.List;
 
-class MazeCreationLogic {
-    private static final int MAXIMUM_WIDTH_INDEX = 0;
-
-    static Cell[][] gridWallFilling(int height, int width) {
-        Cell[][] grid = new Cell[height][width];
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                grid[x][y] = new Cell(x, y, Cell.Type.WALL);
+public class MazeCreationLogic {
+    public static Cell[][] gridWallFilling(int height, int width) {
+        Cell[][] grid = new Cell[height * 2 + 1][width * 2 + 1];
+        for (int row = 0; row < height * 2 + 1; row++) {
+            for (int col = 0; col < width * 2 + 1; col++) {
+                if (row % 2 == 1 && col % 2 == 1) {
+                    grid[row][col] = new Cell(row, col, Cell.Type.PASSAGE);
+                } else {
+                    grid[row][col] = new Cell(row, col, Cell.Type.WALL);
+                }
             }
         }
         return grid;
     }
 
-    static void addWalls(int x, int y, List<Wall> walls, Cell[][] grid) {
-        // добавим стену при возможности слева
-        if (x > 0) {
-            walls.add(new Wall(x - 1, y, x - 2, y));
-        }
-        // справа
-        if (x < grid.length - 1) {
-            walls.add(new Wall(x + 1, y, x + 2, y));
-        }
-        // сверху
-        if (y > 0) {
-            walls.add(new Wall(x, y - 1, x, y - 2));
-        }
-        // снизу
-        if (y < grid[MAXIMUM_WIDTH_INDEX].length - 1) {
-            walls.add(new Wall(x, y + 1, x, y + 2));
-        }
+    private static int getGridMaxWidth(Cell[][] grid) {
+        return grid[0].length;
     }
 
-    static boolean isInsideMaze(int x, int y, Cell[][] grid) {
-        return x >= 0 && x < grid.length && y >= 0 && y < grid[MAXIMUM_WIDTH_INDEX].length;
+    private static int getGridMaxHeight(Cell[][] grid) {
+        return grid.length;
+    }
+
+    public static boolean isInsideMaze(int row, int col, Cell[][] grid) {
+        return row >= 0 && row < getGridMaxHeight(grid) && col >= 0 && col < getGridMaxWidth(grid);
+    }
+
+    public static boolean isInsideMaze(Coordinate coordinate, Cell[][] grid) {
+        return isInsideMaze(coordinate.row(), coordinate.col(), grid);
+    }
+
+        public static void addWalls(int col, int row, List<Wall> walls, Cell[][] grid) {
+        // добавим стену при возможности слева
+        if (col > 0) {
+            walls.add(new Wall(col - 1, row, col - 2, row));
+        }
+        // справа
+        if (col < getGridMaxWidth(grid) - 1) {
+            walls.add(new Wall(col + 1, row, col + 2, row));
+        }
+        // сверху
+        if (row > 0) {
+            walls.add(new Wall(col, row - 1, col, row - 2));
+        }
+        // снизу
+        if (row < getGridMaxHeight(grid) - 1) {
+            walls.add(new Wall(col, row + 1, col, row + 2));
+        }
     }
 }
