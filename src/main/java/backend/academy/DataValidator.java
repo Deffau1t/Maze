@@ -5,7 +5,7 @@ import backend.academy.exceptions.InvalidNumberException;
 public class DataValidator {
     private final String intMatching = "-?\\d+";
     private final int mazeSizeMaximum = 35;
-    private final int mazeSizeMinimum = 3;
+    private final int mazeSizeMinimum = 2;
 
     int choiceCheck(String choice) throws InvalidNumberException {
         if (choice.matches(intMatching)) {
@@ -24,9 +24,9 @@ public class DataValidator {
         if (length.matches(intMatching)) {
             int integerLength = Integer.parseInt(length);
             if (integerLength >= mazeSizeMinimum && integerLength <= mazeSizeMaximum) {
-                return integerLength;
+                return integerLength / 2 + 1;
             } else {
-                throw new InvalidNumberException("Размерам следует быть в пределах [3, 35]");
+                throw new InvalidNumberException("Размерам следует быть в пределах [2, 35]");
             }
         } else {
             throw new InvalidNumberException("Размерами лабиринта должны являться числа");

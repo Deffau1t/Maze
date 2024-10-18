@@ -1,7 +1,6 @@
 package backend.academy.models;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
