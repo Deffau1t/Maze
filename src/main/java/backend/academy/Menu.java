@@ -1,12 +1,15 @@
 package backend.academy;
 
 import backend.academy.exceptions.InvalidNumberException;
+import backend.academy.exceptions.MazeException;
 import backend.academy.generators.Generator;
 import backend.academy.generators.KruskalMazeGenerator;
 import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
+import backend.academy.renders.Renderer;
+import backend.academy.renders.SimpleRender;
 import backend.academy.solvers.AStar;
 import backend.academy.solvers.BFS;
 import backend.academy.solvers.Solver;
@@ -137,7 +140,10 @@ public class Menu {
                 }
             }
 
-            if (maze.grid()[correctEndPointHeight][correctEndPointWidth].type() == Cell.Type.PASSAGE) {
+            if (correctStartPointHeight == correctEndPointHeight &&
+                correctStartPointWidth == correctEndPointWidth) {
+                out.println("Ваши точки совпали, введите новую");
+            } else if (maze.grid()[correctEndPointHeight][correctEndPointWidth].type() == Cell.Type.PASSAGE) {
                 break;
             } else {
                 out.println("Ваша конечная точка оказалась стеной, выберете другую");
@@ -148,7 +154,6 @@ public class Menu {
     }
 
     public void mazeSolving(Maze maze) {
-
         List<Coordinate> pointsCoordinates = choosingPoints(maze);
 
         int correctSolvingChoice;
@@ -175,7 +180,18 @@ public class Menu {
             solver = new AStar();
         }
 
-        List<Coordinate> trace = solver.solve(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast());
-        maze.mazeVisualisation(out, trace);
+        try {
+            List<Coordinate> path = solver.solve(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast());
+            Renderer renderer = new SimpleRender();
+
+            if (path.size() != 2) {
+                out.println(renderer.render(maze, path));
+            } else {
+                out.println("Путь отсутствует");
+                out.println(renderer.render(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast()));
+            }
+        } catch (Exception e) {
+            out.println(e);
+        }
     }
 }
