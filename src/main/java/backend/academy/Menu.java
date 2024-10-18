@@ -1,19 +1,24 @@
 package backend.academy;
 
 import backend.academy.exceptions.InvalidNumberException;
+import backend.academy.generators.Generator;
 import backend.academy.generators.KruskalMazeGenerator;
 import backend.academy.generators.PrimMazeGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
+import backend.academy.solvers.BFS;
+import backend.academy.solvers.Solver;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
-    public void startMazeGeneration() {
-        Scanner scanner = new Scanner(System.in);
-        PrintStream out = System.out;
-        DataValidator correctData = new DataValidator();
+    private final Scanner scanner = new Scanner(System.in);
+    private final PrintStream out = System.out;
+    private final DataValidator correctData = new DataValidator();
+
+    public Maze mazeGeneration() {
 
         int correctMazeChoice;
         while (true) {
@@ -25,20 +30,7 @@ public class Menu {
 
             try {
                 String mazeChoice = scanner.next();
-                correctMazeChoice = correctData.mazeChoiceCheck(mazeChoice);
-                break;
-            } catch (InvalidNumberException e) {
-                out.println(e.message());
-            }
-        }
-
-        int correctWidth;
-        while (true) {
-            out.println("Введите ширину лабиринта");
-
-            try {
-                String width = scanner.next();
-                correctWidth = correctData.sizeCheck(width);
+                correctMazeChoice = correctData.choiceCheck(mazeChoice);
                 break;
             } catch (InvalidNumberException e) {
                 out.println(e.message());
@@ -58,6 +50,19 @@ public class Menu {
             }
         }
 
+        int correctWidth;
+        while (true) {
+            out.println("Введите ширину лабиринта");
+
+            try {
+                String width = scanner.next();
+                correctWidth = correctData.sizeCheck(width);
+                break;
+            } catch (InvalidNumberException e) {
+                out.println(e.message());
+            }
+        }
+
         Generator generator;
         Maze maze;
 
@@ -67,7 +72,10 @@ public class Menu {
             generator = new KruskalMazeGenerator();
         }
         maze = generator.generate(correctHeight, correctWidth);
+        return maze;
+    }
 
+    public List<Coordinate> choosingPoints(Maze maze) {
         int correctStartPointHeight;
         int correctStartPointWidth;
         while (true) {
@@ -76,7 +84,7 @@ public class Menu {
 
                 try {
                     String startPointHeight = scanner.next();
-                    correctStartPointHeight = correctData.pointHeightCheck(startPointHeight, correctHeight);
+                    correctStartPointHeight = correctData.pointHeightCheck(startPointHeight, maze.height());
                     break;
                 } catch (InvalidNumberException e) {
                     out.println(e.message());
@@ -88,7 +96,7 @@ public class Menu {
 
                 try {
                     String startPointWidth = scanner.next();
-                    correctStartPointWidth = correctData.pointWidthCheck(startPointWidth, correctWidth);
+                    correctStartPointWidth = correctData.pointWidthCheck(startPointWidth, maze.width());
                     break;
                 } catch (InvalidNumberException e) {
                     out.println(e.message());
@@ -109,7 +117,7 @@ public class Menu {
 
                 try {
                     String endPointHeight = scanner.next();
-                    correctEndPointHeight = correctData.pointHeightCheck(endPointHeight, correctHeight);
+                    correctEndPointHeight = correctData.pointHeightCheck(endPointHeight, maze.height());
                     break;
                 } catch (InvalidNumberException e) {
                     out.println(e.message());
@@ -121,7 +129,7 @@ public class Menu {
 
                 try {
                     String endPointWidth = scanner.next();
-                    correctEndPointWidth = correctData.pointWidthCheck(endPointWidth, correctWidth);
+                    correctEndPointWidth = correctData.pointWidthCheck(endPointWidth, maze.width());
                     break;
                 } catch (InvalidNumberException e) {
                     out.println(e.message());
@@ -134,8 +142,33 @@ public class Menu {
                 out.println("Ваша конечная точка оказалась стеной, выберете другую");
             }
         }
-        Coordinate startCoordinate = new Coordinate(correctStartPointHeight, correctStartPointWidth);
-        Coordinate endCoordinate = new Coordinate(correctEndPointHeight, correctEndPointWidth);
-        maze.mazeVisualisation(out, startCoordinate, endCoordinate);
+        return List.of(new Coordinate(correctStartPointHeight, correctStartPointWidth),
+            new Coordinate(correctEndPointHeight, correctEndPointWidth));
+    }
+
+    public void mazeSolving(Maze maze) {
+
+        List<Coordinate> pointsCoordinates = choosingPoints(maze);
+
+        int correctSolvingChoice;
+        while (true) {
+            out.print("""
+                Выберите алгоритм поиска пути в лабиринте:
+                1 - Алгоритм BFS
+                """);
+
+            try {
+                String solvingChoice = scanner.next();
+                correctSolvingChoice = correctData.choiceCheck(solvingChoice);
+                break;
+            } catch (InvalidNumberException e) {
+                out.println(e.message());
+            }
+        }
+
+        Solver solver = new BFS();
+
+        List<Coordinate> trace = solver.solve(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast());
+        maze.mazeVisualisation(out, trace);
     }
 }

@@ -7,16 +7,16 @@ public class DataValidator {
     private final int mazeSizeMaximum = 35;
     private final int mazeSizeMinimum = 3;
 
-    int mazeChoiceCheck(String mazeChoice) throws InvalidNumberException {
-        if (mazeChoice.matches(intMatching)) {
-            int integerMazeChoice = Integer.parseInt(mazeChoice);
-            if (integerMazeChoice >= 1 && integerMazeChoice <= 2) {
-                return integerMazeChoice;
+    int choiceCheck(String choice) throws InvalidNumberException {
+        if (choice.matches(intMatching)) {
+            int integerChoice = Integer.parseInt(choice);
+            if (integerChoice >= 1 && integerChoice <= 2) {
+                return integerChoice;
             } else {
                 throw new InvalidNumberException("Введите число в пределах [1, 2]");
             }
         } else {
-            throw new InvalidNumberException("Выбором лабиринта должно являться число");
+            throw new InvalidNumberException("Выбор должен являться числом");
         }
     }
 

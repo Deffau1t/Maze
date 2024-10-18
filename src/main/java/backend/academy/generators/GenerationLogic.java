@@ -1,11 +1,11 @@
-package backend.academy;
+package backend.academy.generators;
 
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Wall;
 import java.util.List;
 
-public class MazeCreationLogic {
+public class GenerationLogic {
     public static Cell[][] gridWallFilling(int height, int width) {
         Cell[][] grid = new Cell[height * 2 + 1][width * 2 + 1];
         for (int row = 0; row < height * 2 + 1; row++) {

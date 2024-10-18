@@ -1,4 +1,4 @@
-package backend.academy;
+package backend.academy.generators;
 
 import backend.academy.models.Maze;
 

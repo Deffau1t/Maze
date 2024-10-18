@@ -1,6 +1,5 @@
 package backend.academy.generators;
 
-import backend.academy.Generator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.DisjointSet;
@@ -9,7 +8,7 @@ import backend.academy.models.Maze;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static backend.academy.MazeCreationLogic.gridWallFilling;
+import static backend.academy.generators.GenerationLogic.gridWallFilling;
 
 public class KruskalMazeGenerator implements Generator {
 

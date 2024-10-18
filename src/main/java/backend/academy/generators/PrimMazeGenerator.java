@@ -1,6 +1,5 @@
 package backend.academy.generators;
 
-import backend.academy.Generator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
