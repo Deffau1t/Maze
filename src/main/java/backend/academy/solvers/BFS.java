@@ -8,10 +8,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import static backend.academy.solvers.SolverLogic.getNeighbors;
 
 public class BFS implements Solver {
-    private final SolverLogic basicFunctions = new SolverLogic();
-
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
         int height = maze.height();
@@ -40,7 +39,7 @@ public class BFS implements Solver {
                 return path;
             }
 
-            for (Coordinate neighbor : basicFunctions.getNeighbors(current, grid, height, width)) {
+            for (Coordinate neighbor : getNeighbors(current, maze)) {
                 if (!visited[neighbor.row()][neighbor.col()]) {
                     visited[neighbor.row()][neighbor.col()] = true;
                     parent[neighbor.row()][neighbor.col()] = current;

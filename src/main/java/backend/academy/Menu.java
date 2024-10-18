@@ -7,6 +7,7 @@ import backend.academy.generators.PrimMazeGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
+import backend.academy.solvers.AStar;
 import backend.academy.solvers.BFS;
 import backend.academy.solvers.Solver;
 import java.io.PrintStream;
@@ -155,6 +156,7 @@ public class Menu {
             out.print("""
                 Выберите алгоритм поиска пути в лабиринте:
                 1 - Алгоритм BFS
+                2 - Алгоритм A*(A-star)
                 """);
 
             try {
@@ -166,7 +168,12 @@ public class Menu {
             }
         }
 
-        Solver solver = new BFS();
+        Solver solver;
+        if (correctSolvingChoice == 1) {
+            solver = new BFS();
+        } else {
+            solver = new AStar();
+        }
 
         List<Coordinate> trace = solver.solve(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast());
         maze.mazeVisualisation(out, trace);
