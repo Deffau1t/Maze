@@ -8,7 +8,7 @@ import backend.academy.models.Maze;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static backend.academy.generators.GenerationLogic.gridWallFilling;
+
 
 public class KruskalMazeGenerator implements Generator {
 
@@ -18,7 +18,7 @@ public class KruskalMazeGenerator implements Generator {
         DisjointSet ds = new DisjointSet(height * width);
 
         // Инициализация сетки
-        Cell[][] grid = gridWallFilling(height, width);
+        Cell[][] grid = Generator.gridWallFilling(height, width);
 
         // Добавление всех возможных ребер
         for (int row = 0; row < height; row++) {

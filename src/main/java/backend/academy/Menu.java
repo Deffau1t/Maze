@@ -3,7 +3,7 @@ package backend.academy;
 import backend.academy.exceptions.InvalidNumberException;
 import backend.academy.generators.Generator;
 import backend.academy.generators.KruskalMazeGenerator;
-import backend.academy.generators.PrimMazeGenerator;
+import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
@@ -25,7 +25,7 @@ public class Menu {
         while (true) {
             out.print("""
                 Выберите тип лабиринта:
-                1 - Алгоритм Прима
+                1 - Алгоритм Recursive backtracker
                 2 - Алгоритм Краскала
                 """);
 
@@ -68,7 +68,7 @@ public class Menu {
         Maze maze;
 
         if (correctMazeChoice == 1) {
-            generator = new PrimMazeGenerator();
+            generator = new RecursiveBacktrackerMazeGenerator();
         } else {
             generator = new KruskalMazeGenerator();
         }

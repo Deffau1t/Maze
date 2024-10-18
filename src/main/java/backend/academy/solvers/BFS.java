@@ -1,6 +1,5 @@
 package backend.academy.solvers;
 
-import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import java.util.ArrayList;
@@ -8,14 +7,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import static backend.academy.solvers.SolverLogic.getNeighbors;
 
 public class BFS implements Solver {
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
         int height = maze.height();
         int width = maze.width();
-        Cell[][] grid = maze.grid();
 
         boolean[][] visited = new boolean[height][width];
         Coordinate[][] parent = new Coordinate[height][width];
@@ -39,7 +36,7 @@ public class BFS implements Solver {
                 return path;
             }
 
-            for (Coordinate neighbor : getNeighbors(current, maze)) {
+            for (Coordinate neighbor : Solver.getNeighbors(current, maze)) {
                 if (!visited[neighbor.row()][neighbor.col()]) {
                     visited[neighbor.row()][neighbor.col()] = true;
                     parent[neighbor.row()][neighbor.col()] = current;
