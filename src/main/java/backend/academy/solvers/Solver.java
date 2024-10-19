@@ -18,7 +18,8 @@ public interface Solver {
             int newCol = coordinate.col() + dir[1];
 
             if (newRow >= 0 && newRow < maze.height() && newCol >= 0 && newCol < maze.width() &&
-                maze.grid()[newRow][newCol].type() == Cell.Type.PASSAGE) {
+                (maze.grid()[newRow][newCol].type() == Cell.Type.PASSAGE ||
+                maze.grid()[newRow][newCol].type() == Cell.Type.COIN)) {
                 neighbors.add(new Coordinate(newRow, newCol));
             }
         }

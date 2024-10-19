@@ -1,5 +1,6 @@
 package backend.academy;
 
+import backend.academy.exceptions.InvalidCoinsAmount;
 import backend.academy.exceptions.InvalidNumberException;
 
 public class DataValidator {
@@ -56,6 +57,19 @@ public class DataValidator {
             }
         } else {
             throw new InvalidNumberException("Координата широты точки должна быть числом");
+        }
+    }
+
+    int coinsAmountCheck(String coinsAmount, int passagesAmount) throws InvalidCoinsAmount {
+        if (coinsAmount.matches(intMatching)) {
+            int integerCoinsAmount = Integer.parseInt(coinsAmount);
+            if (integerCoinsAmount <= passagesAmount && integerCoinsAmount >= 0) {
+                return integerCoinsAmount;
+            } else {
+                throw new InvalidCoinsAmount("Количество монет не может быть больше количества свободных ячеек");
+            }
+        } else {
+            throw new InvalidCoinsAmount("Количество монеток должно являться числом");
         }
     }
 }

@@ -1,6 +1,5 @@
 package backend.academy.renders;
 
-import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import java.util.List;
@@ -10,7 +9,8 @@ public class SimpleRender implements Renderer{
     private final String passageSymbol = "⬜";
     private final String startSymbol = "🟩";
     private final String endSymbol = "🟥";
-    private final String traceSymbol = "🟨";
+    private final String traceSymbol = "🟪";
+    private final String coinSymbol = "🟨";
     private final StringBuilder illustration = new StringBuilder();
 
     @Override
@@ -21,10 +21,12 @@ public class SimpleRender implements Renderer{
                     illustration.append(startSymbol);
                 } else if (row == end.row() && col == end.col()) {
                     illustration.append(endSymbol);
-                } else if (maze.grid()[row][col].type() == Cell.Type.WALL) {
-                    illustration.append(wallSymbol);
                 } else {
-                    illustration.append(passageSymbol);
+                    switch (maze.grid()[row][col].type()) {
+                        case PASSAGE -> illustration.append(passageSymbol);
+                        case COIN -> illustration.append(coinSymbol);
+                        case WALL -> illustration.append(wallSymbol);
+                    }
                 }
             }
             illustration.append("\n");
@@ -37,10 +39,10 @@ public class SimpleRender implements Renderer{
         String[][] symbolsGrid = new String[maze.height()][maze.width()];
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {
-                if (maze.grid()[row][col].type() == Cell.Type.PASSAGE) {
-                    symbolsGrid[row][col] = passageSymbol;
-                } else {
-                    symbolsGrid[row][col] = wallSymbol;
+                switch (maze.grid()[row][col].type()) {
+                    case PASSAGE -> symbolsGrid[row][col] = passageSymbol;
+                    case COIN -> symbolsGrid[row][col] = coinSymbol;
+                    case WALL -> symbolsGrid[row][col] = wallSymbol;
                 }
             }
         }

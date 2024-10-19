@@ -1,7 +1,7 @@
 package backend.academy;
 
+import backend.academy.exceptions.InvalidCoinsAmount;
 import backend.academy.exceptions.InvalidNumberException;
-import backend.academy.exceptions.MazeException;
 import backend.academy.generators.Generator;
 import backend.academy.generators.KruskalMazeGenerator;
 import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
@@ -15,7 +15,9 @@ import backend.academy.solvers.BFS;
 import backend.academy.solvers.Solver;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
+import static backend.academy.models.Maze.getPassageList;
 
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
@@ -154,6 +156,7 @@ public class Menu {
     }
 
     public void mazeSolving(Maze maze) {
+        droppingCoins(maze);
         List<Coordinate> pointsCoordinates = choosingPoints(maze);
 
         int correctSolvingChoice;
@@ -192,6 +195,30 @@ public class Menu {
             }
         } catch (Exception e) {
             out.println(e);
+        }
+    }
+
+    public void droppingCoins(Maze maze) {
+        List<Coordinate> passageList = getPassageList(maze);
+        int correctCoinsAmount;
+        while (true) {
+            out.println("Введите количество монеток в лабиринте");
+            try {
+                String coinsAmount = scanner.next();
+                correctCoinsAmount = correctData.coinsAmountCheck(coinsAmount, passageList.size());
+                break;
+            } catch (InvalidCoinsAmount e) {
+                out.println(e.message());
+            }
+        }
+
+        for (int currentCoin = 0; currentCoin < correctCoinsAmount; currentCoin++) {
+            Random random = new Random();
+            int randomPassageIndex = random.nextInt(passageList.size());
+            Coordinate randomCoin = passageList.get(randomPassageIndex);
+            maze.grid()[randomCoin.row()][randomCoin.col()] =
+                new Cell(randomCoin.row(), randomCoin.col(), Cell.Type.COIN);
+            passageList.remove(randomPassageIndex);
         }
     }
 }

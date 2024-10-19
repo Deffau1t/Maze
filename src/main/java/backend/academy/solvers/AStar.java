@@ -30,7 +30,8 @@ public class AStar implements Solver{
 
             for (Coordinate neighbor : Solver.getNeighbors(current.position, maze)) {
                 int tentativeG = current.g + 1;
-                Node neighborNode = allNodes.getOrDefault(neighbor, new Node(neighbor, null, Integer.MAX_VALUE, 0));
+                Node neighborNode =
+                    allNodes.getOrDefault(neighbor, new Node(neighbor, null, Integer.MAX_VALUE, 0));
 
                 if (tentativeG < neighborNode.g) {
                     neighborNode.parent = current;
