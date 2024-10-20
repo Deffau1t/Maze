@@ -11,6 +11,48 @@ import java.util.Queue;
 public class BFS implements Solver {
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
+        List<Coordinate> coins = Solver.selectCoins(maze);
+        if (coins.isEmpty()) {
+            // Если монет нет, просто найдем путь от старта до финиша
+            return findPath(maze, start, end);
+        }
+
+        // Генерируем все возможные последовательности прохождения монет
+        List<List<Coordinate>> coinSequences = Solver.generatePermutations(coins);
+
+        List<Coordinate> shortestPath = null;
+        int shortestPathLength = Integer.MAX_VALUE;
+
+        for (List<Coordinate> sequence : coinSequences) {
+            List<Coordinate> path = new ArrayList<>();
+            Coordinate current = start;
+
+            for (Coordinate coin : sequence) {
+                List<Coordinate> subPath = findPath(maze, current, coin);
+                if (subPath == null) {
+                    path = null;
+                    break;
+                }
+                path.addAll(subPath);
+                current = coin;
+            }
+
+            if (path != null) {
+                List<Coordinate> finalPath = findPath(maze, current, end);
+                if (finalPath != null) {
+                    path.addAll(finalPath);
+                    if (path.size() < shortestPathLength) {
+                        shortestPath = path;
+                        shortestPathLength = path.size();
+                    }
+                }
+            }
+        }
+
+        return shortestPath;
+    }
+
+    private List<Coordinate> findPath(Maze maze, Coordinate start, Coordinate end) {
         int height = maze.height();
         int width = maze.width();
 

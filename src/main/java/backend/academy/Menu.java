@@ -159,6 +159,10 @@ public class Menu {
         droppingCoins(maze);
         List<Coordinate> pointsCoordinates = choosingPoints(maze);
 
+        out.println("Сгенерированный лабиринт");
+        Renderer renderer = new SimpleRender();
+        out.println(renderer.render(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast()));
+
         int correctSolvingChoice;
         while (true) {
             out.print("""
@@ -185,7 +189,6 @@ public class Menu {
 
         try {
             List<Coordinate> path = solver.solve(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast());
-            Renderer renderer = new SimpleRender();
 
             if (path.size() != 2) {
                 out.println(renderer.render(maze, path));

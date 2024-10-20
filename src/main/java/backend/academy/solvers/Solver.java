@@ -26,4 +26,38 @@ public interface Solver {
 
         return neighbors;
     }
+
+    static List<Coordinate> selectCoins(Maze maze) {
+        List<Coordinate> coinsList = new ArrayList<>();
+        for (int row = 0; row < maze.height(); row++) {
+            for (int col = 0; col < maze.width(); col++) {
+                if (maze.grid()[row][col].type() == Cell.Type.COIN) {
+                    coinsList.add(new Coordinate(row, col));
+                }
+            }
+        }
+        return coinsList;
+    }
+
+    static List<List<Coordinate>> generatePermutations(List<Coordinate> coins) {
+        List<List<Coordinate>> permutations = new ArrayList<>();
+        generatePermutationsHelper(coins, new ArrayList<>(), permutations);
+        return permutations;
+    }
+
+    static void generatePermutationsHelper(List<Coordinate> coins, List<Coordinate> current, List<List<Coordinate>> permutations) {
+        if (coins.isEmpty()) {
+            permutations.add(new ArrayList<>(current));
+            return;
+        }
+
+        for (int i = 0; i < coins.size(); i++) {
+            Coordinate coin = coins.get(i);
+            current.add(coin);
+            List<Coordinate> remainingCoins = new ArrayList<>(coins);
+            remainingCoins.remove(i);
+            generatePermutationsHelper(remainingCoins, current, permutations);
+            current.remove(current.size() - 1);
+        }
+    }
 }

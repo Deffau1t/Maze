@@ -11,7 +11,7 @@ public class SimpleRender implements Renderer{
     private final String endSymbol = "🟥";
     private final String traceSymbol = "🟪";
     private final String coinSymbol = "🟨";
-    private final StringBuilder illustration = new StringBuilder();
+    private StringBuilder illustration = new StringBuilder();
 
     @Override
     public String render(Maze maze, Coordinate start, Coordinate end) {
@@ -36,6 +36,7 @@ public class SimpleRender implements Renderer{
 
     @Override
     public String render(Maze maze, List<Coordinate> path) {
+        illustration = new StringBuilder();
         String[][] symbolsGrid = new String[maze.height()][maze.width()];
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {
