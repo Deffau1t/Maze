@@ -8,7 +8,7 @@ public class DataValidator {
     private final int mazeSizeMaximum = 35;
     private final int mazeSizeMinimum = 2;
 
-    int choiceCheck(String choice) throws InvalidNumberException {
+    public int choiceCheck(String choice) throws InvalidNumberException {
         if (choice.matches(intMatching)) {
             int integerChoice = Integer.parseInt(choice);
             if (integerChoice >= 1 && integerChoice <= 2) {
@@ -21,7 +21,7 @@ public class DataValidator {
         }
     }
 
-    int sizeCheck(String length) throws InvalidNumberException {
+    public int sizeCheck(String length) throws InvalidNumberException {
         if (length.matches(intMatching)) {
             int integerLength = Integer.parseInt(length);
             if (integerLength >= mazeSizeMinimum && integerLength <= mazeSizeMaximum) {
@@ -34,7 +34,7 @@ public class DataValidator {
         }
     }
 
-    int pointHeightCheck(String pointHeightCheck, int height) throws InvalidNumberException {
+    public int pointHeightCheck(String pointHeightCheck, int height) throws InvalidNumberException {
         if (pointHeightCheck.matches(intMatching)) {
             int integerPointHeightCheck = Integer.parseInt(pointHeightCheck);
             if (integerPointHeightCheck >= 1 && integerPointHeightCheck <= height) {
@@ -47,7 +47,7 @@ public class DataValidator {
         }
     }
 
-    int pointWidthCheck(String pointWidthCheck, int width) throws InvalidNumberException {
+    public int pointWidthCheck(String pointWidthCheck, int width) throws InvalidNumberException {
         if (pointWidthCheck.matches(intMatching)) {
             int integerPointWidthCheck = Integer.parseInt(pointWidthCheck);
             if (integerPointWidthCheck >= 1 && integerPointWidthCheck <= width) {
@@ -60,7 +60,7 @@ public class DataValidator {
         }
     }
 
-    int coinsAmountCheck(String coinsAmount, int passagesAmount) throws InvalidCoinsAmount {
+    public int coinsAmountCheck(String coinsAmount, int passagesAmount) throws InvalidCoinsAmount {
         if (coinsAmount.matches(intMatching)) {
             int integerCoinsAmount = Integer.parseInt(coinsAmount);
             if (integerCoinsAmount <= passagesAmount && integerCoinsAmount >= 0) {

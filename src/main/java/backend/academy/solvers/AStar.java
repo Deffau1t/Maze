@@ -1,5 +1,6 @@
 package backend.academy.solvers;
 
+import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import backend.academy.models.Node;
@@ -59,9 +60,11 @@ public class AStar implements Solver{
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingInt(node -> node.f));
         Map<Coordinate, Node> allNodes = new HashMap<>();
 
-        Node startNode = new Node(start, null, 0, heuristic(start, goal));
-        openSet.add(startNode);
-        allNodes.put(start, startNode);
+        if (maze.grid()[start.row()][start.col()].type() != Cell.Type.WALL) {
+            Node startNode = new Node(start, null, 0, heuristic(start, goal));
+            openSet.add(startNode);
+            allNodes.put(start, startNode);
+        }
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
