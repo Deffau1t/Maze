@@ -23,9 +23,10 @@ public class MazeRender implements Renderer {
                     illustration.append(endSymbol);
                 } else {
                     switch (maze.grid()[row][col].type()) {
+                        case PASSAGE -> illustration.append(passageSymbol);
                         case COIN -> illustration.append(coinSymbol);
                         case WALL -> illustration.append(wallSymbol);
-                        default -> illustration.append(passageSymbol);
+                        default -> { }
                     }
                 }
             }
@@ -41,9 +42,10 @@ public class MazeRender implements Renderer {
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {
                 switch (maze.grid()[row][col].type()) {
+                    case PASSAGE -> symbolsGrid[row][col] = passageSymbol;
                     case COIN -> symbolsGrid[row][col] = coinSymbol;
                     case WALL -> symbolsGrid[row][col] = wallSymbol;
-                    default -> illustration.append(passageSymbol);
+                    default -> { }
                 }
             }
         }
