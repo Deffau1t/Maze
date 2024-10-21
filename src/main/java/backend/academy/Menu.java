@@ -8,10 +8,10 @@ import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
+import backend.academy.renders.MazeRender;
 import backend.academy.renders.Renderer;
-import backend.academy.renders.SimpleRender;
-import backend.academy.solvers.AStar;
-import backend.academy.solvers.BFS;
+import backend.academy.solvers.AStarSolver;
+import backend.academy.solvers.BFSSolver;
 import backend.academy.solvers.Solver;
 import java.io.PrintStream;
 import java.util.List;
@@ -142,8 +142,8 @@ public class Menu {
                 }
             }
 
-            if (correctStartPointHeight == correctEndPointHeight &&
-                correctStartPointWidth == correctEndPointWidth) {
+            if (correctStartPointHeight == correctEndPointHeight
+                && correctStartPointWidth == correctEndPointWidth) {
                 out.println("Ваши точки совпали, введите новую");
             } else if (maze.grid()[correctEndPointHeight][correctEndPointWidth].type() == Cell.Type.PASSAGE) {
                 break;
@@ -160,7 +160,7 @@ public class Menu {
         List<Coordinate> pointsCoordinates = choosingPoints(maze);
 
         out.println("Сгенерированный лабиринт");
-        Renderer renderer = new SimpleRender();
+        Renderer renderer = new MazeRender();
         out.println(renderer.render(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast()));
 
         int correctSolvingChoice;
@@ -182,9 +182,9 @@ public class Menu {
 
         Solver solver;
         if (correctSolvingChoice == 1) {
-            solver = new BFS();
+            solver = new BFSSolver();
         } else {
-            solver = new AStar();
+            solver = new AStarSolver();
         }
 
         try {

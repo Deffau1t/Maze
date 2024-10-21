@@ -43,7 +43,7 @@ public class KruskalMazeGenerator implements Generator {
             int fromIndex = from.row() * width + from.col();
             int toIndex = to.row() * width + to.col();
 
-            if (ds.union(fromIndex, toIndex)) {
+            if (ds.connection(fromIndex, toIndex)) {
                 int wallRow = from.row() + to.row() + 1;
                 int wallCol = from.col() + to.col() + 1;
                 grid[wallRow][wallCol] = new Cell(wallRow, wallCol, Cell.Type.PASSAGE);

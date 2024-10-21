@@ -1,8 +1,8 @@
 package backend.academy.models;
 
-import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 @Getter
 public final class Maze {

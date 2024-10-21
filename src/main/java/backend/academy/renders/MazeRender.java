@@ -4,7 +4,7 @@ import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import java.util.List;
 
-public class SimpleRender implements Renderer{
+public class MazeRender implements Renderer {
     private final String wallSymbol = "⬛";
     private final String passageSymbol = "⬜";
     private final String startSymbol = "🟩";
@@ -23,9 +23,9 @@ public class SimpleRender implements Renderer{
                     illustration.append(endSymbol);
                 } else {
                     switch (maze.grid()[row][col].type()) {
-                        case PASSAGE -> illustration.append(passageSymbol);
                         case COIN -> illustration.append(coinSymbol);
                         case WALL -> illustration.append(wallSymbol);
+                        default -> illustration.append(passageSymbol);
                     }
                 }
             }
@@ -41,9 +41,9 @@ public class SimpleRender implements Renderer{
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {
                 switch (maze.grid()[row][col].type()) {
-                    case PASSAGE -> symbolsGrid[row][col] = passageSymbol;
                     case COIN -> symbolsGrid[row][col] = coinSymbol;
                     case WALL -> symbolsGrid[row][col] = wallSymbol;
+                    default -> illustration.append(passageSymbol);
                 }
             }
         }
@@ -51,7 +51,7 @@ public class SimpleRender implements Renderer{
         for (Coordinate coordinate : path) {
             if (coordinate == path.getFirst()) {
                 symbolsGrid[coordinate.row()][coordinate.col()] = startSymbol;
-            } else if (coordinate == path.getLast()){
+            } else if (coordinate == path.getLast()) {
                 symbolsGrid[coordinate.row()][coordinate.col()] = endSymbol;
             } else {
                 symbolsGrid[coordinate.row()][coordinate.col()] = traceSymbol;
@@ -64,7 +64,6 @@ public class SimpleRender implements Renderer{
             }
             illustration.append("\n");
         }
-
         return illustration.toString();
     }
 }

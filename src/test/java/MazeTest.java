@@ -1,16 +1,10 @@
 import backend.academy.DataValidator;
 import backend.academy.exceptions.InvalidNumberException;
-import backend.academy.generators.Generator;
-import backend.academy.generators.KruskalMazeGenerator;
-import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
-import backend.academy.models.Cell;
-import backend.academy.models.Coordinate;
-import backend.academy.models.Maze;
+import backend.academy.generators.*;
+import backend.academy.models.*;
 import backend.academy.renders.Renderer;
-import backend.academy.renders.SimpleRender;
-import backend.academy.solvers.AStar;
-import backend.academy.solvers.BFS;
-import backend.academy.solvers.Solver;
+import backend.academy.renders.MazeRender;
+import backend.academy.solvers.*;
 import java.io.PrintStream;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -21,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MazeTest {
-    private final Renderer renderer = new SimpleRender();
+    private final Renderer renderer = new MazeRender();
     private final PrintStream out = System.out;
     private final int mazeSize = 7;
     private final Generator kruskalGenerator = new KruskalMazeGenerator();
@@ -36,7 +30,7 @@ public class MazeTest {
         Coordinate start = passageList.getFirst();
         Coordinate end = passageList.getLast();
 
-        Solver solver = new BFS();
+        Solver solver = new BFSSolver();
         List<Coordinate> path = solver.solve(maze, start, end);
 
         assertNotNull(path, "Путь должен быть нулевым");
@@ -58,7 +52,7 @@ public class MazeTest {
         // Предположим, что лабиринт непроходимый
         maze.grid()[1][1] = new Cell(1, 1, Cell.Type.WALL);
 
-        Solver solver = new AStar();
+        Solver solver = new AStarSolver();
         List<Coordinate> path = solver.solve(maze, start, end);
 
         assertTrue(path.isEmpty(), "Не должно быть пути в непроходимом лабиринте");
@@ -69,13 +63,11 @@ public class MazeTest {
         String invalidMazeHeight = "incorrect";
         String invalidMazeWidth = "0";
 
-        InvalidNumberException exceptionHeight = assertThrows(InvalidNumberException.class, () -> {
-            correctData.sizeCheck(invalidMazeHeight);
-        });
+        InvalidNumberException exceptionHeight = assertThrows(InvalidNumberException.class, () ->
+            correctData.sizeCheck(invalidMazeHeight));
 
-        InvalidNumberException exceptionWidth = assertThrows(InvalidNumberException.class, () -> {
-            correctData.sizeCheck(invalidMazeWidth);
-        });
+        InvalidNumberException exceptionWidth = assertThrows(InvalidNumberException.class, () ->
+            correctData.sizeCheck(invalidMazeWidth));
 
         String expectedHeightMessage = "Размерами лабиринта должны являться числа";
         String expectedWidthMessage = "Размерам следует быть в пределах [2, 35]";
@@ -90,13 +82,11 @@ public class MazeTest {
         String coordinateRow = "something";
         String coordinateCol = "26";
 
-        InvalidNumberException exceptionCoordinateRow = assertThrows(InvalidNumberException.class, () -> {
-            correctData.pointHeightCheck(coordinateRow, mazeSize / 2);
-        });
+        InvalidNumberException exceptionCoordinateRow = assertThrows(InvalidNumberException.class, () ->
+            correctData.pointHeightCheck(coordinateRow, mazeSize / 2));
 
-        InvalidNumberException exceptionCoordinateCol = assertThrows(InvalidNumberException.class, () -> {
-            correctData.pointWidthCheck(coordinateCol, mazeSize / 2);
-        });
+        InvalidNumberException exceptionCoordinateCol = assertThrows(InvalidNumberException.class, () ->
+            correctData.pointWidthCheck(coordinateCol, mazeSize / 2));
 
         String expectedCoordinateRowMessage = "Координата высоты точки должна быть числом";
         String expectedCoordinateColMessage = "Координата широты точки должна быть в пределах лабиринта";

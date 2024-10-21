@@ -13,25 +13,27 @@ public class DisjointSet {
         }
     }
 
-    int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]);
+    // Поиск корня множества
+    int find(int elem) {
+        if (parent[elem] != elem) {
+            parent[elem] = find(parent[elem]);
         }
-        return parent[x];
+        return parent[elem];
     }
 
-    public boolean union(int x, int y) {
-        int rootX = find(x);
-        int rootY = find(y);
+    // Объединение двух множеств
+    public boolean connection(int firstPoint, int secondPoint) {
+        int rootFirstPoint = find(firstPoint);
+        int rootSecondPoint = find(secondPoint);
 
-        if (rootX != rootY) {
-            if (rank[rootX] > rank[rootY]) {
-                parent[rootY] = rootX;
-            } else if (rank[rootX] < rank[rootY]) {
-                parent[rootX] = rootY;
+        if (rootFirstPoint != rootSecondPoint) {
+            if (rank[rootFirstPoint] > rank[rootSecondPoint]) {
+                parent[rootSecondPoint] = rootFirstPoint;
+            } else if (rank[rootFirstPoint] < rank[rootSecondPoint]) {
+                parent[rootFirstPoint] = rootSecondPoint;
             } else {
-                parent[rootY] = rootX;
-                rank[rootX]++;
+                parent[rootSecondPoint] = rootFirstPoint;
+                rank[rootFirstPoint]++;
             }
             return true;
         }

@@ -35,14 +35,14 @@ public class RecursiveBacktrackerMazeGenerator implements Generator {
         List<int[]> shuffledDirections = Arrays.asList(directions);
         Collections.shuffle(shuffledDirections);
 
-        for (int[] dir : shuffledDirections) {
-            int newRow = row + dir[0];
-            int newCol = col + dir[1];
+        for (int[] direction : shuffledDirections) {
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
 
             if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width && !visited[newRow][newCol]) {
                 // Удаляем стену между текущей ячейкой и новой ячейкой
-                int wallRow = row * 2 + 1 + dir[0];
-                int wallCol = col * 2 + 1 + dir[1];
+                int wallRow = row * 2 + 1 + direction[0];
+                int wallCol = col * 2 + 1 + direction[1];
                 grid[wallRow][wallCol] = new Cell(wallRow, wallCol, Cell.Type.PASSAGE);
 
                 // Рекурсивно вызываем алгоритм для новой ячейки
