@@ -10,19 +10,21 @@ import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
 import backend.academy.renders.MazeRender;
 import backend.academy.renders.Renderer;
-import backend.academy.solvers.AStarSolver;
-import backend.academy.solvers.BFSSolver;
+import backend.academy.solvers.MazeSolverFactory;
 import backend.academy.solvers.Solver;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import static backend.academy.DataValidator.COINS_MAZE_CAPACITY;
 import static backend.academy.models.Maze.getPassageList;
+import static backend.academy.solvers.AbstractSolver.getNeighbors;
 
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
     private final PrintStream out = System.out;
     private final DataValidator correctData = new DataValidator();
+    private final Renderer mazeRenderer = new MazeRender();
 
     public Maze mazeGeneration() {
 
@@ -112,6 +114,8 @@ public class Menu {
                 break;
             } else {
                 out.println("Ваша стартовая точка оказалась стеной, выберете другую");
+                out.println("Ближайшие проходы для данной стартовой точки");
+                out.println(getNeighbors(new Coordinate(correctStartPointHeight, correctStartPointWidth), maze));
             }
         }
 
@@ -149,6 +153,8 @@ public class Menu {
                 break;
             } else {
                 out.println("Ваша конечная точка оказалась стеной, выберете другую");
+                out.println("Ближайшие проходы для данной конечной точки");
+                out.println(getNeighbors(new Coordinate(correctEndPointHeight, correctEndPointWidth), maze));
             }
         }
         return List.of(new Coordinate(correctStartPointHeight, correctStartPointWidth),
@@ -158,10 +164,11 @@ public class Menu {
     public void mazeSolving(Maze maze) {
         droppingCoins(maze);
         List<Coordinate> pointsCoordinates = choosingPoints(maze);
+        Coordinate startInd = pointsCoordinates.getFirst();
+        Coordinate endInd = pointsCoordinates.getLast();
 
-        out.println("Сгенерированный лабиринт");
-        Renderer renderer = new MazeRender();
-        out.println(renderer.render(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast()));
+        out.println("Сгенерированный лабиринт с точками");
+        out.println(mazeRenderer.renderMazeWithCoordinates(maze, startInd, endInd));
 
         int correctSolvingChoice;
         while (true) {
@@ -180,23 +187,19 @@ public class Menu {
             }
         }
 
-        Solver solver;
-        if (correctSolvingChoice == 1) {
-            solver = new BFSSolver();
-        } else {
-            solver = new AStarSolver();
-        }
+        Solver solver = MazeSolverFactory.createSolver(correctSolvingChoice);
 
         try {
-            List<Coordinate> path = solver.solve(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast());
+            List<Coordinate> path = solver.solve(maze, startInd, endInd);
 
             if (path.size() != 2) {
-                out.println(renderer.render(maze, path));
+                out.println(mazeRenderer.renderMazeWithPath(maze, path));
             } else {
                 out.println("Путь отсутствует");
-                out.println(renderer.render(maze, pointsCoordinates.getFirst(), pointsCoordinates.getLast()));
+                out.println(
+                    mazeRenderer.renderMazeWithCoordinates(maze, startInd, endInd));
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             out.println(e);
         }
     }
@@ -205,10 +208,10 @@ public class Menu {
         List<Coordinate> passageList = getPassageList(maze);
         int correctCoinsAmount;
         while (true) {
-            out.println("Введите количество монеток в лабиринте");
+            out.println("Введите количество монеток в лабиринте(не больше " + COINS_MAZE_CAPACITY + ")");
             try {
                 String coinsAmount = scanner.next();
-                correctCoinsAmount = correctData.coinsAmountCheck(coinsAmount, passageList.size());
+                correctCoinsAmount = correctData.coinsAmountCheck(coinsAmount);
                 break;
             } catch (InvalidCoinsAmount e) {
                 out.println(e.message());

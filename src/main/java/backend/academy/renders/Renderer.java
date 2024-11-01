@@ -5,7 +5,7 @@ import backend.academy.models.Maze;
 import java.util.List;
 
 public interface Renderer {
-    String render(Maze maze, Coordinate start, Coordinate end);
+    String renderMazeWithCoordinates(Maze maze, Coordinate start, Coordinate end);
 
-    String render(Maze maze, List<Coordinate> path);
+    String renderMazeWithPath(Maze maze, List<Coordinate> path);
 }

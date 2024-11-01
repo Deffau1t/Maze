@@ -14,7 +14,7 @@ public class MazeRender implements Renderer {
     private StringBuilder illustration = new StringBuilder();
 
     @Override
-    public String render(Maze maze, Coordinate start, Coordinate end) {
+    public String renderMazeWithCoordinates(Maze maze, Coordinate start, Coordinate end) {
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {
                 if (row == start.row() && col == start.col()) {
@@ -36,7 +36,7 @@ public class MazeRender implements Renderer {
     }
 
     @Override
-    public String render(Maze maze, List<Coordinate> path) {
+    public String renderMazeWithPath(Maze maze, List<Coordinate> path) {
         illustration = new StringBuilder();
         String[][] symbolsGrid = new String[maze.height()][maze.width()];
         for (int row = 0; row < maze.height(); row++) {
@@ -51,14 +51,11 @@ public class MazeRender implements Renderer {
         }
 
         for (Coordinate coordinate : path) {
-            if (coordinate == path.getFirst()) {
-                symbolsGrid[coordinate.row()][coordinate.col()] = startSymbol;
-            } else if (coordinate == path.getLast()) {
-                symbolsGrid[coordinate.row()][coordinate.col()] = endSymbol;
-            } else {
-                symbolsGrid[coordinate.row()][coordinate.col()] = traceSymbol;
-            }
+            symbolsGrid[coordinate.row()][coordinate.col()] = traceSymbol;
         }
+
+        symbolsGrid[path.getFirst().row()][path.getFirst().col()] = startSymbol;
+        symbolsGrid[path.getLast().row()][path.getLast().col()] = endSymbol;
 
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {

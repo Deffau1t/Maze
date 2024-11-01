@@ -62,7 +62,7 @@ public abstract class AbstractSolver implements Solver {
         return shortestPath;
     }
 
-    public List<Coordinate> getNeighbors(Coordinate coordinate, Maze maze) {
+    public static List<Coordinate> getNeighbors(Coordinate coordinate, Maze maze) {
         List<Coordinate> neighbors = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 

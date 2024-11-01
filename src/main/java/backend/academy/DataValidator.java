@@ -4,12 +4,13 @@ import backend.academy.exceptions.InvalidCoinsAmount;
 import backend.academy.exceptions.InvalidNumberException;
 
 public class DataValidator {
-    private final String intMatching = "-?\\d+";
-    private final int mazeSizeMaximum = 35;
-    private final int mazeSizeMinimum = 2;
+    private static final String INT_MATCHING = "-?\\d+";
+    private static final int MAZE_SIZE_MAXIMUM = 100;
+    private static final int MAZE_SIZE_MINIMUM = 2;
+    static final int COINS_MAZE_CAPACITY = 7;
 
     public int choiceCheck(String choice) throws InvalidNumberException {
-        if (choice.matches(intMatching)) {
+        if (choice.matches(INT_MATCHING)) {
             int integerChoice = Integer.parseInt(choice);
             if (integerChoice >= 1 && integerChoice <= 2) {
                 return integerChoice;
@@ -22,20 +23,21 @@ public class DataValidator {
     }
 
     public int sizeCheck(String length) throws InvalidNumberException {
-        if (length.matches(intMatching)) {
-            int integerLength = Integer.parseInt(length);
-            if (integerLength >= mazeSizeMinimum && integerLength <= mazeSizeMaximum) {
-                return integerLength / 2 + 1;
-            } else {
-                throw new InvalidNumberException("Размерам следует быть в пределах [2, 35]");
-            }
-        } else {
+        if (!length.matches(INT_MATCHING)) {
             throw new InvalidNumberException("Размерами лабиринта должны являться числа");
         }
+
+        int integerLength = Integer.parseInt(length);
+        if (integerLength < MAZE_SIZE_MINIMUM || integerLength > MAZE_SIZE_MAXIMUM) {
+            throw new InvalidNumberException(
+                "Размерам следует быть в пределах [" + MAZE_SIZE_MINIMUM + ", " + MAZE_SIZE_MAXIMUM + "]");
+        }
+
+        return integerLength / 2 + 1;
     }
 
     public int pointHeightCheck(String pointHeightCheck, int height) throws InvalidNumberException {
-        if (pointHeightCheck.matches(intMatching)) {
+        if (pointHeightCheck.matches(INT_MATCHING)) {
             int integerPointHeightCheck = Integer.parseInt(pointHeightCheck);
             if (integerPointHeightCheck >= 1 && integerPointHeightCheck <= height) {
                 return integerPointHeightCheck;
@@ -48,7 +50,7 @@ public class DataValidator {
     }
 
     public int pointWidthCheck(String pointWidthCheck, int width) throws InvalidNumberException {
-        if (pointWidthCheck.matches(intMatching)) {
+        if (pointWidthCheck.matches(INT_MATCHING)) {
             int integerPointWidthCheck = Integer.parseInt(pointWidthCheck);
             if (integerPointWidthCheck >= 1 && integerPointWidthCheck <= width) {
                 return integerPointWidthCheck;
@@ -60,13 +62,13 @@ public class DataValidator {
         }
     }
 
-    public int coinsAmountCheck(String coinsAmount, int passagesAmount) throws InvalidCoinsAmount {
-        if (coinsAmount.matches(intMatching)) {
+    public int coinsAmountCheck(String coinsAmount) throws InvalidCoinsAmount {
+        if (coinsAmount.matches(INT_MATCHING)) {
             int integerCoinsAmount = Integer.parseInt(coinsAmount);
-            if (integerCoinsAmount <= passagesAmount && integerCoinsAmount >= 0) {
+            if (integerCoinsAmount <= COINS_MAZE_CAPACITY && integerCoinsAmount >= 0) {
                 return integerCoinsAmount;
             } else {
-                throw new InvalidCoinsAmount("Количество монет не может быть больше количества свободных ячеек");
+                throw new InvalidCoinsAmount("Количество монет не может быть больше 7");
             }
         } else {
             throw new InvalidCoinsAmount("Количество монеток должно являться числом");

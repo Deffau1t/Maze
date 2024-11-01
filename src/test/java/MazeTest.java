@@ -38,7 +38,7 @@ public class MazeTest {
         assertEquals(end, path.getLast(), "Проверка на конечную координату пути");
 
         // Вывод лабиринта с найденным путем для визуальной проверки
-        out.println(renderer.render(maze, path));
+        out.println(renderer.renderMazeWithPath(maze, path));
     }
 
     @Test
@@ -70,11 +70,10 @@ public class MazeTest {
             correctData.sizeCheck(invalidMazeWidth));
 
         String expectedHeightMessage = "Размерами лабиринта должны являться числа";
-        String expectedWidthMessage = "Размерам следует быть в пределах [2, 35]";
+        String expectedWidthMessage = "Размерам следует быть в пределах [2, 100]";
 
         assertEquals(expectedHeightMessage, exceptionHeight.message());
         assertEquals(expectedWidthMessage, exceptionWidth.message());
-
     }
 
     @Test
