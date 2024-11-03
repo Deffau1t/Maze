@@ -1,10 +1,8 @@
 package backend.academy;
 
 import backend.academy.exceptions.InvalidCoinsAmount;
-import backend.academy.exceptions.InvalidNumberException;
 import backend.academy.generators.Generator;
-import backend.academy.generators.KruskalMazeGenerator;
-import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
+import backend.academy.generators.MazeGeneratorFactory;
 import backend.academy.models.Cell;
 import backend.academy.models.Coordinate;
 import backend.academy.models.Maze;
@@ -17,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import static backend.academy.DataValidator.COINS_MAZE_CAPACITY;
+import static backend.academy.DataValidator.FIRST_ERROR_STATUS;
 import static backend.academy.models.Maze.getPassageList;
 import static backend.academy.solvers.AbstractSolver.getNeighbors;
 
@@ -36,12 +35,14 @@ public class Menu {
                 2 - Алгоритм Краскала
                 """);
 
-            try {
-                String mazeChoice = scanner.next();
-                correctMazeChoice = correctData.choiceCheck(mazeChoice);
+            String mazeChoice = scanner.next();
+            if (correctData.choiceCheck(mazeChoice) == 0) {
+                correctMazeChoice = Integer.parseInt(mazeChoice);
                 break;
-            } catch (InvalidNumberException e) {
-                out.println(e.message());
+            } else if (correctData.choiceCheck(mazeChoice) == FIRST_ERROR_STATUS) {
+                out.println("Введите тип лабиринта в пределах [1, 2]");
+            } else {
+                out.println("Тип лабиринта должен являться числом");
             }
         }
 
@@ -49,12 +50,15 @@ public class Menu {
         while (true) {
             out.println("Введите высоту лабиринта");
 
-            try {
-                String width = scanner.next();
-                correctHeight = correctData.sizeCheck(width);
+            String height = scanner.next();
+            int currentHeight = correctData.sizeCheck(height);
+            if (currentHeight > 0) {
+                correctHeight = currentHeight;
                 break;
-            } catch (InvalidNumberException e) {
-                out.println(e.message());
+            } else if (currentHeight == FIRST_ERROR_STATUS) {
+                out.println("Высота должна являться числом");
+            } else {
+                out.println("Высота должна быть в пределах [3, 100]");
             }
         }
 
@@ -62,27 +66,23 @@ public class Menu {
         while (true) {
             out.println("Введите ширину лабиринта");
 
-            try {
-                String width = scanner.next();
-                correctWidth = correctData.sizeCheck(width);
+            String width = scanner.next();
+            int currentWidth = correctData.sizeCheck(width);
+            if (currentWidth > 0) {
+                correctWidth = currentWidth;
                 break;
-            } catch (InvalidNumberException e) {
-                out.println(e.message());
+            } else if (currentWidth == FIRST_ERROR_STATUS) {
+                out.println("Ширина должна являться числом");
+            } else {
+                out.println("Ширина должна быть в пределах [3, 100]");
             }
         }
 
-        Generator generator;
-        Maze maze;
-
-        if (correctMazeChoice == 1) {
-            generator = new RecursiveBacktrackerMazeGenerator();
-        } else {
-            generator = new KruskalMazeGenerator();
-        }
-        maze = generator.generate(correctHeight, correctWidth);
-        return maze;
+        Generator generator = MazeGeneratorFactory.createGenerator(correctMazeChoice);
+        return generator.generate(correctHeight, correctWidth);
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     public List<Coordinate> choosingPoints(Maze maze) {
         int correctStartPointHeight;
         int correctStartPointWidth;
@@ -90,27 +90,34 @@ public class Menu {
             while (true) {
                 out.println("Введите координату высоты точки старта");
 
-                try {
-                    String startPointHeight = scanner.next();
-                    correctStartPointHeight = correctData.pointHeightCheck(startPointHeight, maze.height());
+                String startPointHeight = scanner.next();
+                int currentStartPointHeight = correctData.pointHeightCheck(startPointHeight, maze.height());
+                if (currentStartPointHeight > 0) {
+                    correctStartPointHeight = currentStartPointHeight;
                     break;
-                } catch (InvalidNumberException e) {
-                    out.println(e.message());
+                } else if (currentStartPointHeight == FIRST_ERROR_STATUS) {
+                    out.println("Координата высоты точки старта должна быть в пределах [3, 99]");
+                } else {
+                    out.println("Координата высоты точки старта должна являться числом");
                 }
             }
 
             while (true) {
-                out.println("Введите координату широты точки старта");
+                out.println("Введите координату ширины точки старта");
 
-                try {
-                    String startPointWidth = scanner.next();
-                    correctStartPointWidth = correctData.pointWidthCheck(startPointWidth, maze.width());
+                String startPointWidth = scanner.next();
+                int currentStartPointWidth = correctData.pointWidthCheck(startPointWidth, maze.height());
+                if (currentStartPointWidth > 0) {
+                    correctStartPointWidth = currentStartPointWidth;
                     break;
-                } catch (InvalidNumberException e) {
-                    out.println(e.message());
+                } else if (currentStartPointWidth == FIRST_ERROR_STATUS) {
+                    out.println("Координата ширины точки старта должна быть в пределах [1, 99]");
+                } else {
+                    out.println("Координата ширины точки старта должна являться числом");
                 }
             }
-            if (maze.grid()[correctStartPointHeight][correctStartPointWidth].type() == Cell.Type.PASSAGE) {
+
+            if (maze.grid()[correctStartPointHeight][correctStartPointWidth].type() != Cell.Type.WALL) {
                 break;
             } else {
                 out.println("Ваша стартовая точка оказалась стеной, выберете другую");
@@ -125,31 +132,37 @@ public class Menu {
             while (true) {
                 out.println("Введите координату высоты конечной точки");
 
-                try {
-                    String endPointHeight = scanner.next();
-                    correctEndPointHeight = correctData.pointHeightCheck(endPointHeight, maze.height());
+                String endPointHeight = scanner.next();
+                int currentEndPointHeight = correctData.pointHeightCheck(endPointHeight, maze.height());
+                if (currentEndPointHeight > 0) {
+                    correctEndPointHeight = currentEndPointHeight;
                     break;
-                } catch (InvalidNumberException e) {
-                    out.println(e.message());
+                } else if (currentEndPointHeight == FIRST_ERROR_STATUS) {
+                    out.println("Координата высоты конечной точки должна быть в пределах [1, 99]");
+                } else {
+                    out.println("Координата высоты конечной точки должна являться числом");
                 }
             }
 
             while (true) {
-                out.println("Введите координату широты конечной точки");
+                out.println("Введите координату ширины конечной точки");
 
-                try {
-                    String endPointWidth = scanner.next();
-                    correctEndPointWidth = correctData.pointWidthCheck(endPointWidth, maze.width());
+                String endPointWidth = scanner.next();
+                int currentEndPointWidth = correctData.pointWidthCheck(endPointWidth, maze.height());
+                if (currentEndPointWidth > 0) {
+                    correctEndPointWidth = currentEndPointWidth;
                     break;
-                } catch (InvalidNumberException e) {
-                    out.println(e.message());
+                } else if (currentEndPointWidth == FIRST_ERROR_STATUS) {
+                    out.println("Координата ширины конечной точки должна быть в пределах [1, 99]");
+                } else {
+                    out.println("Координата ширины конечной точки должна являться числом");
                 }
             }
 
             if (correctStartPointHeight == correctEndPointHeight
                 && correctStartPointWidth == correctEndPointWidth) {
                 out.println("Ваши точки совпали, введите новую");
-            } else if (maze.grid()[correctEndPointHeight][correctEndPointWidth].type() == Cell.Type.PASSAGE) {
+            } else if (maze.grid()[correctEndPointHeight][correctEndPointWidth].type() != Cell.Type.WALL) {
                 break;
             } else {
                 out.println("Ваша конечная точка оказалась стеной, выберете другую");
@@ -170,6 +183,7 @@ public class Menu {
         out.println("Сгенерированный лабиринт с точками");
         out.println(mazeRenderer.renderMazeWithCoordinates(maze, startInd, endInd));
 
+
         int correctSolvingChoice;
         while (true) {
             out.print("""
@@ -178,12 +192,14 @@ public class Menu {
                 2 - Алгоритм A*(A-star)
                 """);
 
-            try {
-                String solvingChoice = scanner.next();
-                correctSolvingChoice = correctData.choiceCheck(solvingChoice);
+            String solvingChoice = scanner.next();
+            if (correctData.choiceCheck(solvingChoice) == 0) {
+                correctSolvingChoice = Integer.parseInt(solvingChoice);
                 break;
-            } catch (InvalidNumberException e) {
-                out.println(e.message());
+            } else if (correctData.choiceCheck(solvingChoice) == -1) {
+                out.println("Введите тип поиска в пределах [1, 2]");
+            } else {
+                out.println("Выбор поиска должен являться числом");
             }
         }
 
@@ -211,7 +227,7 @@ public class Menu {
             out.println("Введите количество монеток в лабиринте(не больше " + COINS_MAZE_CAPACITY + ")");
             try {
                 String coinsAmount = scanner.next();
-                correctCoinsAmount = correctData.coinsAmountCheck(coinsAmount);
+                correctCoinsAmount = correctData.coinsAmountCheck(coinsAmount, passageList.size());
                 break;
             } catch (InvalidCoinsAmount e) {
                 out.println(e.message());

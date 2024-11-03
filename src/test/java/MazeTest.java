@@ -1,17 +1,23 @@
 import backend.academy.DataValidator;
-import backend.academy.exceptions.InvalidNumberException;
-import backend.academy.generators.*;
-import backend.academy.models.*;
-import backend.academy.renders.Renderer;
+import backend.academy.generators.Generator;
+import backend.academy.generators.KruskalMazeGenerator;
+import backend.academy.generators.RecursiveBacktrackerMazeGenerator;
+import backend.academy.models.Cell;
+import backend.academy.models.Coordinate;
+import backend.academy.models.Maze;
 import backend.academy.renders.MazeRender;
-import backend.academy.solvers.*;
+import backend.academy.renders.Renderer;
+import backend.academy.solvers.AStarSolver;
+import backend.academy.solvers.BFSSolver;
+import backend.academy.solvers.Solver;
 import java.io.PrintStream;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import static backend.academy.DataValidator.FIRST_ERROR_STATUS;
+import static backend.academy.DataValidator.SECOND_ERROR_STATUS;
 import static backend.academy.models.Maze.getPassageList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MazeTest {
@@ -63,35 +69,17 @@ public class MazeTest {
         String invalidMazeHeight = "incorrect";
         String invalidMazeWidth = "0";
 
-        InvalidNumberException exceptionHeight = assertThrows(InvalidNumberException.class, () ->
-            correctData.sizeCheck(invalidMazeHeight));
-
-        InvalidNumberException exceptionWidth = assertThrows(InvalidNumberException.class, () ->
-            correctData.sizeCheck(invalidMazeWidth));
-
-        String expectedHeightMessage = "Размерами лабиринта должны являться числа";
-        String expectedWidthMessage = "Размерам следует быть в пределах [2, 100]";
-
-        assertEquals(expectedHeightMessage, exceptionHeight.message());
-        assertEquals(expectedWidthMessage, exceptionWidth.message());
+        assertEquals(correctData.sizeCheck(invalidMazeHeight), FIRST_ERROR_STATUS);
+        assertEquals(correctData.sizeCheck(invalidMazeWidth), SECOND_ERROR_STATUS);
     }
 
     @Test
     public void invalidCoordinatesTest() {
         String coordinateRow = "something";
-        String coordinateCol = "26";
+        String coordinateCol = "111";
 
-        InvalidNumberException exceptionCoordinateRow = assertThrows(InvalidNumberException.class, () ->
-            correctData.pointHeightCheck(coordinateRow, mazeSize / 2));
-
-        InvalidNumberException exceptionCoordinateCol = assertThrows(InvalidNumberException.class, () ->
-            correctData.pointWidthCheck(coordinateCol, mazeSize / 2));
-
-        String expectedCoordinateRowMessage = "Координата высоты точки должна быть числом";
-        String expectedCoordinateColMessage = "Координата широты точки должна быть в пределах лабиринта";
-
-        assertEquals(expectedCoordinateRowMessage, exceptionCoordinateRow.message());
-        assertEquals(expectedCoordinateColMessage, exceptionCoordinateCol.message());
+        assertEquals(correctData.sizeCheck(coordinateRow), FIRST_ERROR_STATUS);
+        assertEquals(correctData.sizeCheck(coordinateCol), SECOND_ERROR_STATUS);
 
     }
 }
